@@ -1,1 +1,74 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Автокредит</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+</head>
+<body>
+    <h1>Автокредит</h1>
 
+    <form id="loanForm">
+    <!-- Поле ФИО с проверкой на заглавную букву и кириллицу -->
+    <label for="fio">Фамилия</label>
+    <input type="text" id="fio" name="fio" pattern="[А-ЯЁ][а-яё]+" title="Фамилия должна начинаться с заглавной буквы и содержать только кириллические символы">
+
+    <!-- Поле дата рождения в формате 00.00.0000 -->
+    <label for="birth_date">Дата рождения</label>
+    <input type="text" id="birth_date" name="birth_date" pattern="\d{2}\.\d{2}\.\d{4}" placeholder="ДД.ММ.ГГГГ" title="Введите дату в формате ДД.ММ.ГГГГ">
+
+    <!-- Поле паспорт в формате 00 00 000000 -->
+    <label for="passport">Паспорт</label>
+    <input type="text" id="passport" name="passport" pattern="\d{2} \d{2} \d{6}" placeholder="00 00 000000" title="Введите паспорт в формате 00 00 000000">
+
+    <button type="button" id="checkDebtor">Проверить должника</button>
+
+        <hr>
+
+        <label for="brand">Бренд</label>
+        <select id="brand" name="brand">
+            <option value="Toyota">Toyota</option>
+            <!-- Можно добавить больше брендов здесь -->
+        </select>
+
+        <label for="model">Модель</label>
+        <select id="model" name="model">
+            <option value="Corolla">Corolla</option>
+            <option value="Camry">Camry</option>
+            <option value="Land Cruiser Prado">Land Cruiser Prado</option>
+            <option value="Land Cruiser">Land Cruiser</option>
+        </select>
+
+        <label for="year">Год</label>
+        <select id="year" name="year">
+            <option value="2006">2006</option>
+            <option value="2020">2020</option>
+        </select>
+
+        <hr>
+
+        <label for="interest_rate">Процентная ставка (%)</label>
+        <input type="text" id="interest_rate" name="interest_rate">
+
+        <label for="term_months">Срок кредита (месяцы)</label>
+        <input type="text" id="term_months" name="term_months">
+
+        <button type="button" id="calculateLoan">Рассчитать сумму кредита</button>
+
+        <hr>
+
+        <label for="loan_amount">Сумма кредита</label>
+        <input type="text" id="loan_amount" name="loan_amount" readonly>
+
+        <label for="return_amount">К возврату</label>
+        <input type="text" id="return_amount" name="return_amount" readonly>
+
+        <button type="submit">Оформить кредит</button>
+    </form>
+
+    <script src="/static/js/scripts.js"></script>
+</body>
+</html>

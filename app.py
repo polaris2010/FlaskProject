@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import db
 import parse
-import agreement  # Модуль для создания договора
+import agreement
 
 app = Flask(__name__)
 
@@ -16,7 +16,7 @@ def validate_passport(passport):
         return True
     return False
 
-# Маршрут для проверки должника
+# Проверка должника
 @app.route('/check_debtor', methods=['POST'])
 def check_debtor():
     fio = request.form['fio']
@@ -33,7 +33,7 @@ def check_debtor():
     else:
         return jsonify({"message": "Запись не найдена", "status": "success"})
 
-# Маршрут для расчета суммы кредита
+# Расчет суммы кредита
 @app.route('/calculate_loan', methods=['POST'])
 def calculate_loan():
     try:
@@ -46,7 +46,7 @@ def calculate_loan():
     except ValueError:
         return jsonify({"error": "Некорректные данные"}), 400
 
-# Маршрут для оформления кредита
+# Оформление кредита
 @app.route('/submit_loan', methods=['POST'])
 def submit_loan():
     try:

@@ -1,179 +1,73 @@
-/* Общие настройки для всего приложения */
+/* Стили для баннера */
+.banner {
+    background-color: #007BFF; /* Цвет фона баннера */
+    color: white; /* Цвет текста */
+    text-align: center; /* Выравнивание текста по центру */
+    padding: 20px; /* Отступы */
+    font-size: 24px; /* Размер шрифта */
+}
+
+/* Основные стили для страницы */
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-    margin: 0;
-    padding: 0;
-    line-height: 1.6;
+    font-family: Arial, sans-serif; /* Шрифт страницы */
+    margin: 0; /* Убираем отступы */
+    padding: 0; /* Убираем отступы */
 }
 
+/* Контейнер для трех боксов */
 .container {
-    width: 80%;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    margin-top: 40px;
+    display: flex; /* Используем Flexbox */
+    justify-content: space-around; /* Пробел между элементами */
+    margin: 20px; /* Отступы вокруг контейнера */
 }
 
-h1, h2, h3 {
-    color: #444;
-    text-align: center;
+/* Стили для боксов форм */
+.form-box {
+    background-color: #f8f9fa; /* Цвет фона бокса */
+    border: 1px solid #ced4da; /* Граница */
+    border-radius: 5px; /* Закругление углов */
+    padding: 20px; /* Отступы внутри бокса */
+    width: 30%; /* Ширина бокса */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тень */
 }
 
-h1 {
-    margin-bottom: 20px;
-    font-size: 2.5em;
+/* Стили для заголовков форм */
+h1, h2 {
+    text-align: center; /* Выравнивание заголовка по центру */
 }
 
-h2 {
-    font-size: 2em;
-    margin-bottom: 15px;
+/* Стили для меток и полей ввода */
+label {
+    margin-top: 10px; /* Отступ сверху для меток */
+    display: block; /* Выравнивание меток по блоку */
 }
 
-/* Стиль формы */
-form {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fafafa;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+/* Стили для полей ввода */
+input, select {
+    width: 100%; /* Ширина полей ввода */
+    padding: 8px; /* Отступы внутри полей ввода */
+    margin-top: 5px; /* Отступ сверху для полей ввода */
 }
 
-form label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #333;
-}
-
-form input[type="text"],
-form input[type="number"],
-form input[type="date"],
-form input[type="password"],
-form select,
-form textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-}
-
-form input[type="text"]:focus,
-form input[type="number"]:focus,
-form input[type="date"]:focus,
-form select:focus,
-form textarea:focus {
-    border-color: #888;
-    outline: none;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Стиль кнопки */
+/* Стили для кнопок */
 button {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 16px;
-    color: #fff;
-    background-color: #5cb85c;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    text-align: center;
-    transition: background-color 0.3s ease;
-    width: 100%;
+    background-color: #007BFF; /* Цвет фона кнопки */
+    color: white; /* Цвет текста кнопки */
+    border: none; /* Убираем границу */
+    padding: 10px; /* Отступы внутри кнопки */
+    border-radius: 5px; /* Закругление углов кнопки */
+    cursor: pointer; /* Указатель при наведении */
+    width: 100%; /* Ширина кнопки */
+    margin-top: 10px; /* Отступ сверху для кнопок */
 }
 
 button:hover {
-    background-color: #4cae4c;
+    background-color: #0056b3; /* Цвет фона при наведении */
 }
 
-/* Ошибки или сообщения */
-.alert {
-    padding: 15px;
-    background-color: #f44336; /* Red */
-    color: white;
-    margin-bottom: 20px;
-    border-radius: 4px;
-}
-
-.alert.success {
-    background-color: #4CAF50; /* Green */
-}
-
-.alert.info {
-    background-color: #2196F3; /* Blue */
-}
-
-.alert.warning {
-    background-color: #ff9800; /* Orange */
-}
-
-/* Ссылки */
-a {
-    color: #3498db;
-    text-decoration: none;
-}
-
-a:hover {
-    color: #2980b9;
-}
-
-/* Таблицы */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    font-size: 1em;
-    border-radius: 8px 8px 0 0;
-    overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-table thead tr {
-    background-color: #3498db;
-    color: #fff;
-    text-align: left;
-    font-weight: bold;
-}
-
-table th,
-table td {
-    padding: 12px 15px;
-    border: 1px solid #ddd;
-}
-
-table tbody tr {
-    border-bottom: 1px solid #ddd;
-}
-
-table tbody tr:nth-of-type(even) {
-    background-color: #f3f3f3;
-}
-
-table tbody tr:hover {
-    background-color: #f1f1f1;
-}
-
-/* Мобильная адаптация */
-@media (max-width: 768px) {
-    .container {
-        width: 100%;
-        padding: 10px;
-    }
-
-    form {
-        padding: 15px;
-    }
-
-    button {
-        width: 100%;
-        font-size: 14px;
-    }
+/* Стили для сообщений */
+#resultMessage {
+    color: red; /* Цвет текста сообщения */
+    font-weight: bold; /* Жирный текст */
+    margin-top: 10px; /* Отступ сверху */
 }

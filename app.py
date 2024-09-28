@@ -1,76 +1,59 @@
 from flask import Flask, render_template, request, jsonify
-import db
-import parse
-import agreement
+import db  # Импортируем ваш модуль для работы с базой данных
+import parse  # Импортируем ваш модуль для парсинга цен
 
 app = Flask(__name__)
+
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# Валидация паспортных данных
-def validate_passport(passport):
-    import re
-    if re.match(r'^\d{2} \d{2} \d{6}$', passport):
-        return True
-    return False
 
-# Проверка должника
+# Маршрут для проверки должника
 @app.route('/check_debtor', methods=['POST'])
 def check_debtor():
-    fio = request.form['fio']
-    birth_date = request.form['birth_date']
-    passport = request.form['passport']
+    data = request.json
+    fio = data.get('fio')
+    birth_date = data.get('birth_date')
+    passport = data.get('passport')
 
-    if not validate_passport(passport):
-        return jsonify({"error": "Некорректные паспортные данные"}), 400
+    # Проверка наличия необходимых данных
+    if not passport and not fio and not birth_date:
+        return jsonify({"error": "Данные не указаны"}), 400
 
-    search = db.check_debtors(fio=fio, birth_date=birth_date, passport_data=passport)
+    # Проверяем должника в базе данных
+    result = db.check_debtors(fio=fio, birth_date=birth_date, passport_data=passport)
 
-    if search:
-        return jsonify({"message": "Запись найдена, кредит невозможен", "status": "error"})
+    if result:
+        return jsonify({"status": "found", "message": "Должник найден!"})
     else:
-        return jsonify({"message": "Запись не найдена", "status": "success"})
+        return jsonify({"status": "not_found", "message": "Должник не найден."})
 
-# Расчет суммы кредита
-@app.route('/calculate_loan', methods=['POST'])
-def calculate_loan():
-    try:
-        loan_amount = float(request.form['loan_amount'])
-        interest_rate = float(request.form['interest_rate']) / 100
-        term_months = int(request.form['term_months'])
 
-        return_amount = loan_amount * (1 + interest_rate * term_months)
-        return jsonify({"return_amount": round(return_amount, 2)})
-    except ValueError:
-        return jsonify({"error": "Некорректные данные"}), 400
+# Маршрут для расчета средней цены авто
+@app.route('/calculatePrice', methods=['POST'])
+def calculate_price():
+    data = request.json
+    brand = data.get('brand')
+    model = data.get('model')
+    year = data.get('year')
 
-# Оформление кредита
-@app.route('/submit_loan', methods=['POST'])
-def submit_loan():
-    try:
-        fio = request.form['fio']
-        birth_date = request.form['birth_date']
-        passport = request.form['passport']
-        brand = request.form['brand']
-        model = request.form['model']
-        year = int(request.form['year'])
-        loan_amount = float(request.form['loan_amount'])
-        return_amount = float(request.form['return_amount'])
+    if not brand or not model or not year:
+        return jsonify({"error": "Не указаны все данные для расчета"}), 400
 
-        # Сохранение данных в базу
-        db.save_loan(fio=fio, birth_date=birth_date, passport_data=passport,
-                     brand=brand, model=model, year=year, loan_amount=loan_amount, return_amount=return_amount)
+    # Парсим среднюю цену авто
+    url = parse.get_avito_url(brand, model, year)
+    if not url:
+        return jsonify({"error": "Не удалось найти URL для указанных данных"}), 400
 
-        # Создание договора
-        agreement_file = agreement.create_agreement(fio=fio, birth_date=birth_date, passport=passport,
-                                                    brand=brand, model=model, year=year,
-                                                    credit_sum=loan_amount, return_amount=return_amount)
+    avg_price = parse.scrape_item_prices(url)
 
-        return jsonify({"message": f"Кредит оформлен! Договор сохранен: {agreement_file}", "status": "success"})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 400
+    if avg_price > 0:
+        return jsonify({"status": "success", "avg_price": avg_price})
+    else:
+        return jsonify({"status": "error", "message": "Не удалось рассчитать стоимость авто"}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,21 +1,16 @@
-import sqlite3
-
-DATABASE = 'borrowers.db'
+import sqlite3  # Импортируем библиотеку для работы с SQLite
 
 def get_connection():
-    """Функция для получения подключения к базе данных."""
-    conn = sqlite3.connect(DATABASE)
-    conn.row_factory = sqlite3.Row  # Это позволяет получать результаты как словари
-    return conn
+    """Функция для получения соединения с базой данных."""
+    return sqlite3.connect('your_database.db')  # Замените 'your_database.db' на имя вашей базы данных
 
 def check_debtors(fio=None, birth_date=None, passport_data=None):
     """Проверка должников по ФИО, дате рождения и паспортным данным."""
     with get_connection() as conn:
         cursor = conn.cursor()
 
-        # Создаем таблицу, если она не существует
-        cursor.execute('''
-        CREATE TABLE IF NOT EXISTS debtors (
+        # Создаем таблицу только при инициализации приложения
+        cursor.execute('''CREATE TABLE IF NOT EXISTS debtors (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             fio TEXT NOT NULL,
             birth_date TEXT NOT NULL,
@@ -46,24 +41,3 @@ def check_debtors(fio=None, birth_date=None, passport_data=None):
         result = cursor.fetchone()
 
     return result
-
-def save_loan(fio, birth_date, passport_data, brand, model, year, loan_amount, return_amount):
-    """Сохранение данных по кредиту."""
-    try:
-        with get_connection() as conn:
-            cursor = conn.cursor()
-
-            # Вставляем данные в таблицу
-            cursor.execute('''
-            INSERT INTO debtors (fio, birth_date, passport_data, brand, model, year, loan_amount, return_amount) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
-            (fio, birth_date, passport_data, brand, model, year, loan_amount, return_amount))
-
-            # Сохраняем изменения
-            conn.commit()
-
-    except sqlite3.Error as e:
-        print(f"SQLite error: {e}")
-        return False  # Можно вернуть False или сообщение об ошибке для дальнейшей обработки
-
-    return True  # Успешное завершение операции

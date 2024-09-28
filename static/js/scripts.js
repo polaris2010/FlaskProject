@@ -1,31 +1,58 @@
 $(document).ready(function() {
-    $('#fio').on('input', function() {
-        // Приводим первую букву к заглавной, а остальные буквы к строчным
-        let fio = $(this).val().toLowerCase();
-        fio = fio.charAt(0).toUpperCase() + fio.slice(1);
-        $(this).val(fio);
-    });
-});
+    // Обработка проверки должника
+    $('#checkDebtor').click(function() {
+        var fio = $('#fio').val();
+        var birth_date = $('#birth_date').val();
+        var passport = $('#passport').val();
 
-    $('#calculateLoan').click(function () {
-        var formData = $('#loanForm').serialize();
-
-        $.post('/calculate_loan', formData, function (response) {
-            $('#return_amount').val(response.return_amount);
-        }).fail(function (response) {
-            alert(response.responseJSON.error);
+        $.ajax({
+            url: '/check_debtor',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                fio: fio,
+                birth_date: birth_date,
+                passport: passport
+            }),
+            success: function(response) {
+                if (response.status === 'found') {
+                    $('#resultMessage').text('В кредите отказано');
+                } else {
+                    $('#resultMessage').text('Кредит выдать');
+                }
+            },
+            error: function(xhr) {
+                $('#resultMessage').text('Произошла ошибка: ' + xhr.responseJSON.error);
+            }
         });
     });
 
-    $('#loanForm').submit(function (event) {
-        event.preventDefault();  // Останавливаем стандартное поведение формы
+    // Обработка расчета стоимости авто
+    $('#calculatePrice').click(function() {
+        var brand = $('#brand').val();
+        var model = $('#model').val();
+        var year = $('#year').val();
 
-        var formData = $(this).serialize();
-
-        $.post('/submit_loan', formData, function (response) {
-            alert(response.message);
-        }).fail(function (response) {
-            alert(response.responseJSON.error);
+        $.ajax({
+            url: '/calculatePrice',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                brand: brand,
+                model: model,
+                year: year
+            }),
+            success: function(response) {
+                if (response.status === 'success') {
+                    // Устанавливаем стоимость авто в поле
+                    $('#carPrice').val(response.avg_price + ' руб.');
+                } else {
+                    alert('Ошибка: ' + response.message);
+                }
+            },
+            error: function(xhr) {
+                alert('Произошла ошибка: ' + xhr.responseJSON.error);
+            }
         });
     });
 });

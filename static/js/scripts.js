@@ -55,4 +55,20 @@ $(document).ready(function() {
             }
         });
     });
+
+    // Обработка расчета кредита
+    $('#Ok_credit').click(function() {
+        const formData = new FormData(document.getElementById('CreditForm'));
+
+        fetch('/calculate', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('credit_over').value = data.total_payment.toFixed(2);
+            document.getElementById('date_over').value = data.return_date;
+        })
+        .catch(error => console.error('Ошибка:', error));
+    });
 });

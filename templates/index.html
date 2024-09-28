@@ -16,6 +16,7 @@
             font-weight: bold;
         }
     </style>
+   
 </head>
 <body>
     <h1>Автокредит</h1>
@@ -39,28 +40,36 @@
 
     <!-- Форма для расчета стоимости авто -->
     <form id="calculatePriceForm">
-        <label for="brand">Бренд</label>
-        <select id="brand" name="brand">
-            <option value="Toyota">Toyota</option>
-        </select>
+    <label for="brand">Бренд</label>
+    <select id="brand" name="brand">
+        <option value="Toyota">Toyota</option>
+    </select>
 
-        <label for="model">Модель</label>
-        <select id="model" name="model">
-            <option value="Corolla">Corolla</option>
-            <option value="Camry">Camry</option>
-            <option value="Land Cruiser Prado">Land Cruiser Prado</option>
-            <option value="Land Cruiser">Land Cruiser</option>
-        </select>
+    <label for="model">Модель</label>
+    <select id="model" name="model">
+        <option value="Corolla">Corolla</option>
+        <option value="Camry">Camry</option>
+        <option value="Land Cruiser Prado">Land Cruiser Prado</option>
+        <option value="Land Cruiser">Land Cruiser</option>
+    </select>
 
-        <label for="year">Год</label>
-        <select id="year" name="year">
-            <option value="2006">2006</option>
-            <option value="2020">2020</option>
-        </select>
+    <label for="year">Год</label>
+    <select id="year" name="year">
+        <option value="2006">2006</option>
+        <option value="2020">2020</option>
+    </select>
 
-        <!-- Кнопка для расчета стоимости авто -->
-        <button type="button" id="calculatePrice">Рассчитать стоимость авто</button>
-    </form>
+
+
+    <!-- Поле для отображения стоимости авто -->
+
+    <label for="carPrice">Стоимость авто:</label>
+    <input type="text" id="carPrice" name="carPrice" readonly>
+
+    <!-- Кнопка для расчета стоимости авто -->
+    <button type="button" id="calculatePrice">Рассчитать стоимость авто</button>
+
+</form>
 
 
     <hr>

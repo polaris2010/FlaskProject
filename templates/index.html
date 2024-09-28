@@ -4,40 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Автокредит</title>
-    <link rel="stylesheet" href="/static/css/styles.css">
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+    <script src="/static/js/scripts.js"></script>
     <style>
-        /* Добавляем отступ между кнопками */
         .button-spacing {
-            margin-top: 0.75em; /* Отступ равный половине высоты кнопки */
+            margin-top: 0.75em;
+        }
+        #resultMessage {
+            color: red;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
     <h1>Автокредит</h1>
 
+    <!-- Форма для проверки должника -->
     <form id="loanForm">
-        <!-- Поле ФИО с проверкой на заглавную букву и кириллицу -->
         <label for="fio">Фамилия</label>
-        <input type="text" id="fio" name="fio" oninput="formatFio(this)" placeholder="Введите фамилию">
+        <input type="text" id="fio" name="fio" placeholder="Введите фамилию">
 
-        <!-- Поле дата рождения в формате 00.00.0000 -->
         <label for="birth_date">Дата рождения</label>
-        <input type="text" id="birth_date" name="birth_date" oninput="formatBirthDate(this)" maxlength="10" placeholder="ДД.ММ.ГГГГ" title="Введите дату в формате ДД.ММ.ГГГГ">
+        <input type="text" id="birth_date" name="birth_date" maxlength="10" placeholder="ДД.ММ.ГГГГ" title="Введите дату в формате ДД.ММ.ГГГГ">
 
-        <!-- Поле паспорт в формате 00 00 000000 -->
         <label for="passport">Паспорт</label>
-        <input type="text" id="passport" name="passport" oninput="formatPassport(this)" maxlength="13" placeholder="00 00 000000" title="Введите паспорт в формате 00 00 000000">
+        <input type="text" id="passport" name="passport" maxlength="12" placeholder="00 00 000000" title="Введите паспорт в формате 00 00 000000">
 
         <button type="button" id="checkDebtor">Проверить должника</button>
+        <div id="resultMessage"></div>
+    </form>
 
-        <hr>
+    <hr>
 
+    <!-- Форма для расчета стоимости авто -->
+    <form id="calculatePriceForm">
         <label for="brand">Бренд</label>
         <select id="brand" name="brand">
             <option value="Toyota">Toyota</option>
-            <!-- Можно добавить больше брендов здесь -->
         </select>
 
         <label for="model">Модель</label>
@@ -55,69 +59,12 @@
         </select>
 
         <!-- Кнопка для расчета стоимости авто -->
-        <button type="button" id="calculatePrice">Стоимость авто</button>
-
-        <hr>
-
-        <!-- Поля для суммы кредита, процентной ставки и срока кредита -->
-        <label for="loan_amount">Сумма кредита</label>
-        <input type="text" id="loan_amount" name="loan_amount" readonly>
-
-        <label for="interest_rate">Процентная ставка (%)</label>
-        <input type="text" id="interest_rate" name="interest_rate">
-
-        <label for="term_months">Срок кредита (месяцы)</label>
-        <input type="text" id="term_months" name="term_months">
-
-        <label for="return_amount">К возврату</label>
-        <input type="text" id="return_amount" name="return_amount" readonly>
-
-        <!-- Новая кнопка "Рассчитать кредит" перед кнопкой "Оформить кредит" -->
-        <button type="button" id="calculateLoan" class="button-spacing">Рассчитать кредит</button>
-
-        <!-- Отступ, чтобы добавить пространство между кнопками -->
-        <div style="height: 1.25em;"></div> <!-- Высота равна половине высоты кнопки (примерно 2.5em) -->
-
-        <button type="submit">Оформить кредит</button>
+        <button type="button" id="calculatePrice">Рассчитать стоимость авто</button>
     </form>
 
-    <script>
-        function formatFio(input) {
-            let value = input.value;
-            if (value.length > 0) {
-                value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
-            }
-            input.value = value.replace(/[^А-Яа-яЁё\s]/g, '');
-        }
 
-        function formatBirthDate(input) {
-            let value = input.value.replace(/\D/g, '');
-            if (value.length > 2) {
-                value = value.substring(0, 2) + '.' + value.substring(2);
-            }
-            if (value.length > 5) {
-                value = value.substring(0, 5) + '.' + value.substring(5);
-            }
-            input.value = value;
-        }
+    <hr>
 
-        function formatPassport(input) {
-            // Убираем все, кроме цифр
-            let value = input.value.replace(/\D/g, '');
 
-            // Проверяем длину и форматируем
-            if (value.length > 2) {
-                value = value.substring(0, 2) + ' ' + value.substring(2); // Форматируем первые две цифры
-            }
-            if (value.length > 6) {
-                value = value.substring(0, 7) + ' ' + value.substring(7); // Форматируем 6 оставшихся цифр
-            }
-
-            // Устанавливаем значение в поле ввода
-            input.value = value;
-        }
-    </script>
-
-    <script src="/static/js/scripts.js"></script>
 </body>
 </html>

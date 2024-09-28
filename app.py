@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import db  # Импортируем ваш модуль для работы с базой данных
 import parse  # Импортируем ваш модуль для парсинга цен
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
@@ -53,6 +54,27 @@ def calculate_price():
         return jsonify({"status": "success", "avg_price": avg_price})
     else:
         return jsonify({"status": "error", "message": "Не удалось рассчитать стоимость авто"}), 500
+
+
+@app.route('/calculate', methods=['POST'])
+def calculate():
+    credit_sum = float(request.form['credit_sum'])
+    percent = float(request.form['percent'])
+    time_credit = int(request.form['time_credit'])
+
+    # Рассчитываем общую сумму к возврату
+    total_payment = credit_sum + (credit_sum * (percent / 100) * time_credit)
+
+    # Рассчитываем дату возврата
+    return_date = datetime.now() + timedelta(days=time_credit * 30)  # Предполагаем, что срок в месяцах
+
+    # Форматируем дату для отображения
+    return_date_str = return_date.strftime('%Y-%m-%d')
+
+    return jsonify({
+        'total_payment': round(total_payment, 2),
+        'return_date': return_date_str
+    })
 
 
 if __name__ == '__main__':

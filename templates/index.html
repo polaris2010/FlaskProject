@@ -5,97 +5,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Автокредит</title>
 
+    <link rel="stylesheet" href="/static/css/app.css"> <!-- Подключение внешнего CSS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/static/js/scripts.js"></script>
-    <style>
-        .button-spacing {
-            margin-top: 0.75em;
-        }
-        #resultMessage {
-            color: red;
-            font-weight: bold;
-        }
-    </style>
-   
 </head>
 <body>
-    <h1>Автокредит</h1>
+    <div class="banner">Добро пожаловать в систему автокредитования</div> <!-- Баннер -->
 
-    <!-- Форма для проверки должника -->
-    <form id="loanForm">
-        <label for="fio">Фамилия</label>
-        <input type="text" id="fio" name="fio" placeholder="Введите фамилию">
+    <div class="container"> <!-- Контейнер для боксов -->
+        <!-- Форма для проверки должника -->
+        <div class="form-box">
+            <h2>Данные заемщика</h2>
+            <form id="loanForm">
+                <label for="fio">Фамилия</label>
+                <input type="text" id="fio" name="fio" placeholder="Введите фамилию">
 
-        <label for="birth_date">Дата рождения</label>
-        <input type="text" id="birth_date" name="birth_date" maxlength="10" placeholder="ДД.ММ.ГГГГ" title="Введите дату в формате ДД.ММ.ГГГГ">
+                <label for="birth_date">Дата рождения</label>
+                <input type="text" id="birth_date" name="birth_date" maxlength="10" placeholder="ДД.ММ.ГГГГ" title="Введите дату в формате ДД.ММ.ГГГГ">
 
-        <label for="passport">Паспорт</label>
-        <input type="text" id="passport" name="passport" maxlength="12" placeholder="00 00 000000" title="Введите паспорт в формате 00 00 000000">
+                <label for="passport">Паспорт</label>
+                <input type="text" id="passport" name="passport" maxlength="12" placeholder="00 00 000000" title="Введите паспорт в формате 00 00 000000">
 
-        <button type="button" id="checkDebtor">Проверить должника</button>
-        <div id="resultMessage"></div>
-    </form>
+                <button type="button" id="checkDebtor">Проверить должника</button>
+                <div id="resultMessage"></div>
+            </form>
+        </div>
 
-    <hr>
+        <!-- Форма для расчета стоимости авто -->
+        <div class="form-box">
+            <h2>Стоимость авто</h2>
+            <form id="calculatePriceForm">
+                <label for="brand">Бренд</label>
+                <select id="brand" name="brand">
+                    <option value="Toyota">Toyota</option>
+                </select>
 
-    <!-- Форма для расчета стоимости авто -->
-    <form id="calculatePriceForm">
-    <label for="brand">Бренд</label>
-    <select id="brand" name="brand">
-        <option value="Toyota">Toyota</option>
-    </select>
+                <label for="model">Модель</label>
+                <select id="model" name="model">
+                    <option value="Corolla">Corolla</option>
+                    <option value="Camry">Camry</option>
+                    <option value="Land Cruiser Prado">Land Cruiser Prado</option>
+                    <option value="Land Cruiser">Land Cruiser</option>
+                </select>
 
-    <label for="model">Модель</label>
-    <select id="model" name="model">
-        <option value="Corolla">Corolla</option>
-        <option value="Camry">Camry</option>
-        <option value="Land Cruiser Prado">Land Cruiser Prado</option>
-        <option value="Land Cruiser">Land Cruiser</option>
-    </select>
+                <label for="year">Год</label>
+                <select id="year" name="year">
+                    <option value="2006">2006</option>
+                    <option value="2020">2020</option>
+                </select>
 
-    <label for="year">Год</label>
-    <select id="year" name="year">
-        <option value="2006">2006</option>
-        <option value="2020">2020</option>
-    </select>
+                <label for="carPrice">Стоимость авто:</label>
+                <input type="text" id="carPrice" name="carPrice" placeholder="Стоимость авто" readonly>
 
-    <!-- Поле для отображения стоимости авто -->
+                <button type="button" id="calculatePrice">Рассчитать стоимость авто</button>
+            </form>
+        </div>
 
-    <label for="carPrice">Стоимость авто:</label>
-    <input type="text" id="carPrice" name="carPrice" placeholder="Стоимость авто" readonly>
+        <!-- Форма для кредита -->
+        <div class="form-box">
+            <h2>Данные по кредиту</h2>
+            <form id="CreditForm">
+                <label for="credit_sum">Сумма кредита</label>
+                <input type="number" id="credit_sum" name="credit_sum" placeholder="Сумма кредита" step="0.01" required>
 
-    <!-- Кнопка для расчета стоимости авто -->
-    <button type="button" id="calculatePrice">Рассчитать стоимость авто</button>
+                <label for="percent">Процент</label>
+                <input type="number" id="percent" name="percent" placeholder="Процент" step="0.01" required>
 
-</form>
+                <label for="time_credit">Срок кредита (в месяцах)</label>
+                <input type="number" id="time_credit" name="time_credit" placeholder="Срок кредита" required>
 
-    <hr>
+                <label for="credit_over">К возврату</label>
+                <input type="number" id="credit_over" name="credit_over" placeholder="К возврату" step="0.01" required>
 
-<form id="CreditForm">
-    <label for="credit_sum">Сумма кредита</label>
-    <input type="number" id="credit_sum" name="credit_sum" placeholder="Сумма кредита" step="0.01" required>
+                <label for="date_over">Дата возврата</label>
+                <input type="date" id="date_over" name="date_over" required>
 
-    <label for="percent">Процент</label>
-    <input type="number" id="percent" name="percent" placeholder="Процент" step="0.01" required>
+                <button type="button" id="Ok_credit">Рассчитать кредит</button>
+                <div id="resultMessage"></div>
 
-    <label for="time_credit">Срок кредита (в месяцах)</label>
-    <input type="number" id="time_credit" name="time_credit" placeholder="Срок кредита" required>
+                <button type="button" id="Make_credit">Оформить кредит</button>
+            </form>
+        </div>
+    </div>
 
-    <label for="credit_over">К возврату</label>
-    <input type="number" id="credit_over" name="credit_over" placeholder="К возврату" step="0.01" required>
-
-    <label for="date_over">Дата возврата</label>
-    <input type="date" id="date_over" name="date_over" required>
-
-    <button type="button" id="Ok_credit">Рассчитать кредит</button>
-    <div id="resultMessage"></div>
-
-    <hr>
-
-    <button type="button" id="Make_credit">Оформить кредит</button>
-
-
-</form>
-
+    <script src="/static/js/scripts.js"></script>
 </body>
 </html>

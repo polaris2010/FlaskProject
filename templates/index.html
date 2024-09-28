@@ -59,21 +59,43 @@
         <option value="2020">2020</option>
     </select>
 
-
-
     <!-- Поле для отображения стоимости авто -->
 
     <label for="carPrice">Стоимость авто:</label>
-    <input type="text" id="carPrice" name="carPrice" readonly>
+    <input type="text" id="carPrice" name="carPrice" placeholder="Стоимость авто" readonly>
 
     <!-- Кнопка для расчета стоимости авто -->
     <button type="button" id="calculatePrice">Рассчитать стоимость авто</button>
 
 </form>
 
+    <hr>
+
+<form id="CreditForm">
+    <label for="credit_sum">Сумма кредита</label>
+    <input type="number" id="credit_sum" name="credit_sum" placeholder="Сумма кредита" step="0.01" required>
+
+    <label for="percent">Процент</label>
+    <input type="number" id="percent" name="percent" placeholder="Процент" step="0.01" required>
+
+    <label for="time_credit">Срок кредита (в месяцах)</label>
+    <input type="number" id="time_credit" name="time_credit" placeholder="Срок кредита" required>
+
+    <label for="credit_over">К возврату</label>
+    <input type="number" id="credit_over" name="credit_over" placeholder="К возврату" step="0.01" required>
+
+    <label for="date_over">Дата возврата</label>
+    <input type="date" id="date_over" name="date_over" required>
+
+    <button type="button" id="Ok_credit">Рассчитать кредит</button>
+    <div id="resultMessage"></div>
 
     <hr>
 
+    <button type="button" id="Make_credit">Оформить кредит</button>
+
+
+</form>
 
 </body>
 </html>

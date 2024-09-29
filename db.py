@@ -1,26 +1,28 @@
-import sqlite3  # Импортируем библиотеку для работы с SQLite
+import sqlite3
 
+# Соединяемся с базой данных
 def get_connection():
-    """Функция для получения соединения с базой данных."""
-    return sqlite3.connect('your_database.db')  # Замените 'your_database.db' на имя вашей базы данных
+    return sqlite3.connect('borrowers.db')
 
-def check_debtors(fio=None, birth_date=None, passport_data=None):
-    """Проверка должников по ФИО, дате рождения и паспортным данным."""
+# Проверяем наличие должника в базе
+def check_debtors(fio=None, birth_date=None, passport=None):
     with get_connection() as conn:
         cursor = conn.cursor()
 
-        # Создаем таблицу только при инициализации приложения
+        # Создаем таблицу при инициализации приложения
         cursor.execute('''CREATE TABLE IF NOT EXISTS debtors (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             fio TEXT NOT NULL,
             birth_date TEXT NOT NULL,
-            passport_data TEXT NOT NULL,
+            passport TEXT NOT NULL,
             brand TEXT,
             model TEXT,
             year INTEGER,
-            loan_amount REAL,
-            return_amount REAL
-        )''')
+            credit_sum INTEGER,
+            interest_rate INTEGER,
+            time_credit INTEGER,
+            return_amount REAL,
+            date_over TEXT)''')
 
         # Формируем запрос с динамическими параметрами
         query = "SELECT * FROM debtors WHERE 1=1"
@@ -32,12 +34,32 @@ def check_debtors(fio=None, birth_date=None, passport_data=None):
         if birth_date:
             query += " AND birth_date = ?"
             params.append(birth_date)
-        if passport_data:
-            query += " AND passport_data = ?"
-            params.append(passport_data)
+        if passport:  # Исправлено: изменено 'passport_data' на 'passport'
+            query += " AND passport = ?"
+            params.append(passport)
 
         # Выполняем запрос
         cursor.execute(query, params)
         result = cursor.fetchone()
 
     return result
+
+# Создаем запись о выданном кредите
+def save_loan(fio, birth_date, passport, brand, model, year, credit_sum, interest_rate, time_credit, return_amount, date_over):
+    conn = get_connection()  # Исправлено: используем get_connection() для соединения
+    cursor = conn.cursor()
+
+    try:
+        # Вставляем данные в таблицу
+        cursor.execute('''
+        INSERT INTO debtors (fio, birth_date, passport, brand, model, year, credit_sum, interest_rate, time_credit, return_amount, date_over) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+        (fio, birth_date, passport, brand, model, year, credit_sum, interest_rate, time_credit, return_amount, date_over))
+
+        # Сохраняем изменения
+        conn.commit()
+    except sqlite3.Error as e:
+        print(f"SQLite error: {e}")
+    finally:
+        # Закрываем соединение
+        conn.close()

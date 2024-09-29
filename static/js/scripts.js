@@ -18,7 +18,7 @@ $(document).ready(function() {
                 if (response.status === 'found') {
                     $('#resultMessage').text('В кредите отказано');
                 } else {
-                    $('#resultMessage').text('Кредит выдать');
+                    $('#resultMessage').text('Кредит можно выдать');
                 }
             },
             error: function(xhr) {
@@ -45,7 +45,12 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.status === 'success') {
                     // Устанавливаем стоимость авто в поле
-                    $('#carPrice').val(response.avg_price + ' руб.');
+                    var carPrice = response.avg_price;
+                    $('#car_price').val(carPrice.toFixed(2) + ' руб.');
+
+                    // Рассчитываем 60% от стоимости авто и устанавливаем в поле для суммы кредита
+                    var creditSum = carPrice * 0.6;
+                    $('#credit_sum').val(creditSum.toFixed(2));
                 } else {
                     alert('Ошибка: ' + response.message);
                 }
@@ -54,6 +59,17 @@ $(document).ready(function() {
                 alert('Произошла ошибка: ' + xhr.responseJSON.error);
             }
         });
+    });
+
+    // Автоматический расчет суммы кредита при изменении поля "Стоимость авто"
+    $('#car_price').on('input', function() {
+        var carPrice = parseFloat($(this).val());
+        if (!isNaN(carPrice)) {
+            var creditSum = carPrice * 0.6;
+            $('#credit_sum').val(creditSum.toFixed(2));
+        } else {
+            $('#credit_sum').val(''); // Очистка поля, если значение некорректно
+        }
     });
 
     // Обработка расчета кредита
@@ -66,9 +82,14 @@ $(document).ready(function() {
         })
         .then(response => response.json())
         .then(data => {
-            document.getElementById('credit_over').value = data.total_payment.toFixed(2);
+            document.getElementById('return_amount').value = data.total_payment.toFixed(2);
             document.getElementById('date_over').value = data.return_date;
         })
         .catch(error => console.error('Ошибка:', error));
+    });
+
+    // Логика для оформления кредита
+    $('#Make_credit').click(function() {
+        alert('Кредит успешно оформлен!');
     });
 });

@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify
-import db  # Импортируем ваш модуль для работы с базой данных
-import parse  # Импортируем ваш модуль для парсинга цен
+import db
+import parse
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
@@ -11,7 +11,7 @@ def index():
     return render_template('index.html')
 
 
-# Маршрут для проверки должника
+# Проверяем должника
 @app.route('/check_debtor', methods=['POST'])
 def check_debtor():
     data = request.json
@@ -32,7 +32,7 @@ def check_debtor():
         return jsonify({"status": "not_found", "message": "Должник не найден."})
 
 
-# Маршрут для расчета средней цены авто
+# Расчет средней цены авто
 @app.route('/calculatePrice', methods=['POST'])
 def calculate_price():
     data = request.json
@@ -43,7 +43,7 @@ def calculate_price():
     if not brand or not model or not year:
         return jsonify({"error": "Не указаны все данные для расчета"}), 400
 
-    # Парсим среднюю цену авто
+    # Ищем среднюю цену авто
     url = parse.get_avito_url(brand, model, year)
     if not url:
         return jsonify({"error": "Не удалось найти URL для указанных данных"}), 400
@@ -58,23 +58,28 @@ def calculate_price():
 
 @app.route('/calculate', methods=['POST'])
 def calculate():
-    credit_sum = float(request.form['credit_sum'])
-    percent = float(request.form['percent'])
+    credit_sum = float(request.form['credit_sum'])  # Уже рассчитывается в форме
+    interest_rate = float(request.form['interest_rate'])
     time_credit = int(request.form['time_credit'])
 
-    # Рассчитываем общую сумму к возврату
-    total_payment = credit_sum + (credit_sum * (percent / 100) * time_credit)
+    # Логика расчета общей суммы к возврату
+    total_payment = credit_sum + (credit_sum * (interest_rate / 100) * time_credit)
 
-    # Рассчитываем дату возврата
+    # Расчет даты возврата
     return_date = datetime.now() + timedelta(days=time_credit * 30)  # Предполагаем, что срок в месяцах
 
-    # Форматируем дату для отображения
-    return_date_str = return_date.strftime('%Y-%m-%d')
-
+    # Возвращаем результат в формате JSON
     return jsonify({
         'total_payment': round(total_payment, 2),
-        'return_date': return_date_str
+        'return_date': return_date.strftime('%Y-%m-%d')
     })
+
+
+# @app.route('/credit', methods=['POST'])
+# def credit():
+    # - кнопка "оформить кредит" должна добавлять данные заемщика, авто и кредита в таблицу debtors БД borrowers.db;
+    # - создать файл c именем заемщика fio в формате txt по образцу agreement.py;
+    # - после выдать сообщение "заемщеик внесен в базу данных, договор займа сформирован".
 
 
 if __name__ == '__main__':

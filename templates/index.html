@@ -62,30 +62,31 @@
         </div>
 
         <!-- Форма для кредита -->
-        <div class="form-box">
-            <h2>Данные по кредиту</h2>
-            <form id="CreditForm">
-                <label for="credit_sum">Сумма кредита</label>
-                <input type="number" id="credit_sum" name="credit_sum" placeholder="Сумма кредита" step="0.01" required>
+<div class="form-box">
+    <h2>Данные по кредиту</h2>
+    <form id="CreditForm">
 
-                <label for="percent">Процент</label>
-                <input type="number" id="percent" name="percent" placeholder="Процент" step="0.01" required>
+        <label for="credit_sum">Сумма кредита (60% от стоимости авто)</label>
+        <input type="number" id="credit_sum" name="credit_sum" placeholder="Сумма кредита" step="0.01" readonly>
 
-                <label for="time_credit">Срок кредита (в месяцах)</label>
-                <input type="number" id="time_credit" name="time_credit" placeholder="Срок кредита" required>
+        <label for="interest_rate">Процент</label>
+        <input type="number" id="interest_rate" name="interest_rate" placeholder="Процент" step="0.01" required>
 
-                <label for="credit_over">К возврату</label>
-                <input type="number" id="credit_over" name="credit_over" placeholder="К возврату" step="0.01" required>
+        <label for="time_credit">Срок кредита (в месяцах)</label>
+        <input type="number" id="time_credit" name="time_credit" placeholder="Срок кредита" required>
 
-                <label for="date_over">Дата возврата</label>
-                <input type="date" id="date_over" name="date_over" required>
+        <label for="return_amount">К возврату</label>
+        <input type="number" id="return_amount" name="credit_over" placeholder="К возврату" step="0.01" readonly>
 
-                <button type="button" id="Ok_credit">Рассчитать кредит</button>
-                <div id="resultMessage"></div>
+        <label for="date_over">Дата возврата</label>
+        <input type="date" id="date_over" name="date_over" readonly>
 
-                <button type="button" id="Make_credit">Оформить кредит</button>
-            </form>
-        </div>
+        <button type="button" id="Ok_credit">Рассчитать кредит</button>
+        <div id="resultMessage"></div>
+
+        <button type="button" id="Make_credit">Оформить кредит</button>
+    </form>
+</div>
     </div>
 
     <script src="/static/js/scripts.js"></script>

@@ -29,37 +29,38 @@ $(document).ready(function() {
 
     // Обработка расчета стоимости авто
     $('#calculatePrice').click(function() {
-        var brand = $('#brand').val();
-        var model = $('#model').val();
-        var year = $('#year').val();
+    var brand = $('#brand').val();
+    var model = $('#model').val();
+    var year = $('#year').val();
 
-        $.ajax({
-            url: '/calculatePrice',
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({
-                brand: brand,
-                model: model,
-                year: year
-            }),
-            success: function(response) {
-                if (response.status === 'success') {
-                    // Устанавливаем стоимость авто в поле
-                    var carPrice = response.avg_price;
-                    $('#car_price').val(carPrice.toFixed(2) + ' руб.');
+    $.ajax({
+        url: '/calculatePrice',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            brand: brand,
+            model: model,
+            year: year
+        }),
+        success: function(response) {
+            console.log(response); // Для отладки
+            if (response.status === 'success') {
+                var carPrice = parseFloat(response.avg_price); // Преобразуем в число
+                $('#car_price').val(carPrice.toFixed(2) + ' руб.');
 
-                    // Рассчитываем 60% от стоимости авто и устанавливаем в поле для суммы кредита
-                    var creditSum = carPrice * 0.6;
-                    $('#credit_sum').val(creditSum.toFixed(2));
-                } else {
-                    alert('Ошибка: ' + response.message);
-                }
-            },
-            error: function(xhr) {
-                alert('Произошла ошибка: ' + xhr.responseJSON.error);
+                // Рассчитываем 60% от стоимости авто
+                var creditSum = carPrice * 0.6;
+                $('#credit_sum').val(creditSum.toFixed(2));
+            } else {
+                alert('Ошибка: ' + response.message);
             }
-        });
+        },
+        error: function(xhr) {
+            console.error(xhr.responseText); // Для отладки
+            alert('Произошла ошибка: ' + xhr.responseJSON.error);
+        }
     });
+});
 
     // Автоматический расчет суммы кредита при изменении поля "Стоимость авто"
     $('#car_price').on('input', function() {

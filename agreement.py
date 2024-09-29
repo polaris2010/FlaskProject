@@ -1,39 +1,36 @@
-from flask import Flask, request, send_file, jsonify
-import os
-import agreement  # Импортируем модуль agreement
+import datetime
 
-app = Flask(__name__)
+def create_agreement(fio, birth_date, passport, brand, model, year, credit_sum, interest_rate, time_credit, return_amount, date_over):
+    # Получаем текущую дату
+    today_date = datetime.datetime.now().strftime("%d.%m.%Y")
 
-# Убедитесь, что директория для договоров существует
-if not os.path.exists('./agreements'):
-    os.makedirs('./agreements')
+    # Формируем содержание договора
+    agreement_text = f"""
+    ДОГОВОР ЗАЙМА
+    
+    Москва, {today_date}
+    
+    Автоломбард, далее «Кредитор», с одной стороны и {fio}, далее «Заемщик», с другой стороны, 
+    заключили настоящий договор о нижеследующем:
+    
+    По настоящему договору Автоломбард передает в собственность Заемщика денежные средства в сумме {credit_sum} 
+    под {interest_rate} % в месяц, на срок {time_credit} месяцев, под залог автомобиля {brand} {model} {year},
+    а Заемщик обязуется возвратить Кредитору {return_amount} в срок до {date_over}.
 
-@app.route('/create_agreement', methods=['POST'])
-def create_agreement_route():
-    # Получаем данные из POST-запроса
-    data = request.json
-    fio = data.get('fio')
-    birth_date = data.get('birth_date')
-    passport = data.get('passport')
-    brand = data.get('brand')
-    model = data.get('model')
-    year = data.get('year')
-    credit_sum = data.get('credit_sum')
-    interest_rate = data.get('interest_rate')
-    term = data.get('term')
-    return_amount = data.get('return_amount')
+    Стороны:
+    
+    Автоломбард: ИНН 00000000000, Адрес: Москва, Кремль
+    Заемщик: {fio}, дата рождения {birth_date}, паспорт {passport}
 
-    # Создаем договор
-    file_name = agreement.create_agreement(fio, birth_date, passport, brand, model, year, credit_sum, interest_rate, term, return_amount)
+    Подписи сторон:
+    __________________________________
+    """
 
-    # Полный путь к файлу
-    file_path = os.path.join('./agreements', file_name)
+    # Генерируем имя файла на основе ФИО и текущей даты
+    file_name = f"agreement_{fio.replace(' ', '_')}_{today_date}.txt"
 
-    try:
-        # Возвращаем файл для загрузки
-        return send_file(file_path, as_attachment=True)
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+    # Записываем текст договора в файл
+    with open(file_name, "w", encoding="utf-8") as file:
+        file.write(agreement_text)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+    return file_name

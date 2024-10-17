@@ -1,9 +1,9 @@
 $(document).ready(function() {
     // Обработчик нажатия кнопки "Проверить должника"
     $('#checkDebtor').on('click', function() {
-        var fio = $('#fio').val();
-        var birth_date = $('#birth_date').val();
-        var passport = $('#passport').val();
+        var fio = $('#fio').val().trim();
+        var birth_date = $('#birth_date').val().trim();
+        var passport = $('#passport').val().trim();
 
         // Проверка обязательных полей перед отправкой запроса
         if (!fio || !birth_date || !passport) {
@@ -36,9 +36,9 @@ $(document).ready(function() {
 
     // Обработка расчета стоимости авто
     $('#calculatePrice').click(function() {
-        var brand = $('#brand').val();
-        var model = $('#model').val();
-        var year = $('#year').val();
+        var brand = $('#brand').val().trim();
+        var model = $('#model').val().trim();
+        var year = $('#year').val().trim();
 
         // Проверка обязательных полей
         if (!brand || !model || !year) {
@@ -57,7 +57,7 @@ $(document).ready(function() {
             }),
             success: function(response) {
                 if (response.status === 'success') {
-                    var carPrice = parseFloat(response.avg_price); // Преобразуем в число
+                    var carPrice = parseFloat(response.avg_price);
                     $('#car_price').val(carPrice.toFixed(2) + ' руб.');
 
                     // Рассчитываем 60% от стоимости авто
@@ -69,7 +69,7 @@ $(document).ready(function() {
             },
             error: function(xhr) {
                 console.error(xhr.responseText);
-                alert('Произошла ошибка: ' + xhr.responseJSON.error);
+                alert('Произошла ошибка: ' + (xhr.responseJSON ? xhr.responseJSON.error : 'Неизвестная ошибка'));
             }
         });
     });
@@ -81,7 +81,7 @@ $(document).ready(function() {
             var creditSum = carPrice * 0.6;
             $('#credit_sum').val(creditSum.toFixed(2));
         } else {
-            $('#credit_sum').val(''); // Очистка поля, если значение некорректно
+            $('#credit_sum').val('');
         }
     });
 
@@ -93,7 +93,12 @@ $(document).ready(function() {
             method: 'POST',
             body: formData
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Ошибка сервера');
+            }
+            return response.json();
+        })
         .then(data => {
             document.getElementById('return_amount').value = data.total_payment.toFixed(2);
             document.getElementById('date_over').value = data.return_date;
@@ -113,18 +118,10 @@ $(document).ready(function() {
             credit_sum: $('#credit_sum').val(),
             interest_rate: $('#interest_rate').val(),
             time_credit: $('#time_credit').val(),
-            car_brand: $('#car_brand').val(),
-            car_model: $('#car_model').val(),
-            car_year: $('#car_year').val()
+            car_brand: $('#brand').val(),
+            car_model: $('#model').val(),
+            car_year: $('#year').val()
         };
-
-//        // Проверка обязательных полей перед отправкой запроса
-//        if (!formData.fio || !formData.passport || !formData.birth_date || !formData.credit_sum ||
-//            !formData.interest_rate || !formData.time_credit || !formData.car_brand ||
-//            !formData.car_model || !formData.car_year) {
-//            $('#resultMessage').text("Пожалуйста, заполните все обязательные поля!").css('color', 'red');
-//            return;
-//        }
 
         // Отправляем данные на сервер
         $.ajax({
@@ -133,12 +130,15 @@ $(document).ready(function() {
             contentType: 'application/json',
             data: JSON.stringify(formData),
             success: function(response) {
-                $('#resultMessage').text(response.message).css('color', 'green');
-                $('#CreditForm')[0].reset(); // Очистить форму
+                if (response.status === 'success') {
+                    $('#resultMessage').text("Кредит оформлен, договор сформирован!").css('color', 'green');
+                } else {
+                    $('#resultMessage').text(response.message).css('color', 'red');
+                }
             },
             error: function(xhr) {
-                console.error(xhr.responseText);
-                $('#resultMessage').text('Произошла ошибка: ' + xhr.responseJSON.error).css('color', 'red');
+                $('#resultMessage').text('Произошла ошибка при оформлении кредита').css('color', 'red');
+                console.error('Ошибка:', xhr.responseText);
             }
         });
     });

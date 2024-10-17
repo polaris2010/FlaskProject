@@ -82,7 +82,7 @@ def calculate():
         app.logger.info(
             f'Расчет кредита: Сумма={credit_sum}, Процентная ставка={interest_rate}, Срок={time_credit} месяцев')
 
-        total_payment = credit_sum * (1 + (interest_rate / 100) * (time_credit / 12))
+        total_payment = credit_sum * (1 + (interest_rate / 100) * (time_credit / 1))
         return_date = datetime.now() + timedelta(days=time_credit * 30)
 
         app.logger.info(f'Общая сумма к возврату: {total_payment}, Дата возврата: {return_date.strftime("%Y-%m-%d")}')
@@ -111,7 +111,7 @@ def credit():
         app.logger.info(f'Оформление кредита для {data["fio"]} на автомобиль {data["car_brand"]} {data["car_model"]} {car_year}')
 
         # Расчет общей суммы кредита с учетом ежемесячного начисления процентов
-        monthly_rate = interest_rate / 100 / 12
+        monthly_rate = interest_rate / 100 / 1
         total_payment = credit_sum * (monthly_rate * (1 + monthly_rate)**time_credit) / ((1 + monthly_rate)**time_credit - 1) * time_credit
         return_date = datetime.now() + timedelta(days=time_credit * 30)
         date_over = return_date.strftime('%Y-%m-%d')

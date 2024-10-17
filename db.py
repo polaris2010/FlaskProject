@@ -34,7 +34,7 @@ def check_debtors(fio=None, birth_date=None, passport=None):
         if birth_date:
             query += " AND birth_date = ?"
             params.append(birth_date)
-        if passport:  # Исправлено: изменено 'passport_data' на 'passport'
+        if passport:
             query += " AND passport = ?"
             params.append(passport)
 
@@ -44,22 +44,22 @@ def check_debtors(fio=None, birth_date=None, passport=None):
 
     return result
 
-# Создаем запись о выданном кредите
-def save_loan(fio, birth_date, passport, brand, model, year, credit_sum, interest_rate, time_credit, return_amount, date_over):
-    conn = get_connection()  # Исправлено: используем get_connection() для соединения
+# Добавляем заемщика в базу данных и информацию о кредите
+def add_debtor(fio, birth_date, passport, brand, model, year, credit_sum, interest_rate, time_credit, return_amount, date_over):
+    conn = get_connection()
     cursor = conn.cursor()
 
     try:
-        # Вставляем данные в таблицу
-        cursor.execute('''
-        INSERT INTO debtors (fio, birth_date, passport, brand, model, year, credit_sum, interest_rate, time_credit, return_amount, date_over) 
+        # Вставляем данные о заемщике и кредите
+        cursor.execute('''INSERT INTO debtors (fio, birth_date, passport, brand, model, year, credit_sum, interest_rate, time_credit, return_amount, date_over)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
         (fio, birth_date, passport, brand, model, year, credit_sum, interest_rate, time_credit, return_amount, date_over))
 
-        # Сохраняем изменения
+        # Сохраняем изменения в базе данных
         conn.commit()
     except sqlite3.Error as e:
         print(f"SQLite error: {e}")
     finally:
-        # Закрываем соединение
+        # Закрываем соединение с базой данных
         conn.close()
+

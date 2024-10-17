@@ -50,6 +50,7 @@ def add_debtor(fio, birth_date, passport, brand, model, year, credit_sum, intere
     cursor = conn.cursor()
 
     try:
+        print(f"Попытка добавления записи в базу данных: {fio}, {passport}")
         # Вставляем данные о заемщике и кредите
         cursor.execute('''INSERT INTO debtors (fio, birth_date, passport, brand, model, year, credit_sum, interest_rate, time_credit, return_amount, date_over)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
@@ -57,6 +58,7 @@ def add_debtor(fio, birth_date, passport, brand, model, year, credit_sum, intere
 
         # Сохраняем изменения в базе данных
         conn.commit()
+        print(f"Запись успешно добавлена в базу данных: {fio}, {passport}")
     except sqlite3.Error as e:
         print(f"SQLite error: {e}")
     finally:

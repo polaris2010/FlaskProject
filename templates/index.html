@@ -15,22 +15,59 @@
 
     <div class="container"> <!-- Контейнер для боксов -->
         <!-- Форма для проверки должника -->
-        <div class="form-box">
-            <h2>Данные заемщика</h2>
-            <form id="loanForm">
-                <label for="fio">Фамилия</label>
-                <input type="text" id="fio" name="fio" placeholder="Введите фамилию">
+<div class="form-box">
+    <h2>Данные заемщика</h2>
+    <form id="loanForm">
+        <label for="fio">Фамилия</label>
+        <input type="text" id="fio" name="fio" placeholder="Введите фамилию">
 
-                <label for="birth_date">Дата рождения</label>
-                <input type="text" id="birth_date" name="birth_date" maxlength="10" placeholder="ДД.ММ.ГГГГ" title="Введите дату в формате ДД.ММ.ГГГГ">
+        <label for="birth_date">Дата рождения</label>
+        <input type="text" id="birth_date" name="birth_date" maxlength="10" placeholder="ДД.ММ.ГГГГ" title="Введите дату в формате ДД.ММ.ГГГГ">
 
-                <label for="passport">Паспорт</label>
-                <input type="text" id="passport" name="passport" maxlength="12" placeholder="00 00 000000" title="Введите паспорт в формате 00 00 000000">
+        <label for="passport">Паспорт</label>
+        <input type="text" id="passport" name="passport" maxlength="11" placeholder="00 00 000000" title="Введите паспорт в формате 00 00 000000">
 
-                <button type="button" id="checkDebtor">Проверить должника</button>
-                <div id="resultMessage"></div>
-            </form>
-        </div>
+        <button type="button" id="checkDebtor">Проверить должника</button>
+        <div id="resultMessage"></div>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fioInput = document.getElementById('fio');
+    const passportInput = document.getElementById('passport');
+    const birthDateInput = document.getElementById('birth_date');
+
+    // Обработка поля "Фамилия"
+    fioInput.addEventListener('input', function() {
+        this.value = this.value.replace(/^[а-яё]/, function(match) {
+            return match.toUpperCase();
+        });
+    });
+
+    // Обработка поля "Паспорт"
+    passportInput.addEventListener('input', function() {
+        let value = this.value.replace(/\D/g, ''); // Удаляем все нецифровые символы
+        if (value.length > 4) {
+            value = value.slice(0, 2) + ' ' + value.slice(2, 4) + ' ' + value.slice(4);
+        } else if (value.length > 2) {
+            value = value.slice(0, 2) + ' ' + value.slice(2);
+        }
+        this.value = value;
+    });
+
+    // Обработка поля "Дата рождения"
+    birthDateInput.addEventListener('input', function() {
+        let value = this.value.replace(/\D/g, ''); // Удаляем все нецифровые символы
+        if (value.length > 4) {
+            value = value.slice(0, 2) + '.' + value.slice(2, 4) + '.' + value.slice(4, 8);
+        } else if (value.length > 2) {
+            value = value.slice(0, 2) + '.' + value.slice(2);
+        }
+        this.value = value;
+    });
+});
+</script>
 
         <!-- Форма для расчета стоимости авто -->
         <div class="form-box">
